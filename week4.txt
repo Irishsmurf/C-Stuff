@@ -1,0 +1,42 @@
+Q. What is the storage capacity of this disk in bytes?
+
+Surfaces * tracks per surface * sectors per track * bytes per sector
+8 * 100,000 * 750 * 512 = 307.2 billion bytes
+
+Q. What is its maximum transfer rate (in bytes/sec) for a single track?
+
+Bytes read in 1s = Tracks in 1s * bytes in a track
+(10000 / 60) * 750 * 512 = 64 million bytes/sec
+
+Q. What is the maximum transfer rate (in bytes/sec) for a single cylinder?
+
+Thanks to head skewing it is (practically) the same as for single track
+
+Q. What is the maximum transfer rate across cylinders
+
+Here we must factor in the one track seek time...
+
+Bytes per cylinder / (time to read 1 cylinder + time to move to next cylinder)
+Bytes per track x tracks per cylinder
+750 * 512 * 8 = 3,072,000 bytes per cylinder
+Time to read 1 track = (60 / 10000) * 8 = 0.006s
+Time to read 1 cylinder = 0.006 * 8 = 0.048s
+Time to move to next cylinder = 0.0002s
+So we have 3,072,000 / 0.0482 = 63.7 billion bytes/sec
+
+Q. How much cylinder skew (in sectors) is required?
+
+In 0.0002 seconds how many sectors go by?
+In 1s (10000 / 60) tracks go by
+In 1s (10000 / 60) * 750 sectors go by
+In 0.0002s (0.0002 * 10000 * 750) / 60 sectors go by = 25 sectors
+
+Q. What would be the transfer rate (in bytes/sec) without cylinder skew?
+
+(We are effectively waiting for one revolution extra per cylinder)
+Total time = time to read 1 cylinder + time for 1 revolution
+= 0.048 (from above) + time for 1 revolution
+= 0.048 + (60 / 10000)
+= 0.048 + 0.006
+So we have 3,072,000 / (0.048 + 0.006)
+= 3,072,000 / 0.054 = 56.9 million bytes/sec
